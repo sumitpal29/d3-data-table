@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Move table Contents</title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+		<link rel="stylesheet" href="css/table.css">
+		<script type="text/javascript" src = "js/table.js"></script>
+	</head>
+	<body>
+		<div id = "root" class="root">
+			
+		</div>
+		<script type="text/javascript">
+			let data = {
+					'columns' : ['close', 'date'],
+					'data' : [
+						{ "date" : "2013-01-01", "close" : 45 },
+						{ "date" : "2013-02-01", "close" : 50 },
+						{ "date" : "2013-03-01", "close" : 55 },
+						{ "date" : "2013-04-01", "close" : 50 },
+						{ "date" : "2013-05-01", "close" : 45 },
+						{ "date" : "2013-06-01", "close" : 50 },
+						{ "date" : "2013-07-01", "close" : 50 },
+						{ "date" : "2013-08-01", "close" : 55 }
+					]
+				},
+				tableElem = D3Table.createTable('#root', data).getElement('tbody');
+		</script>
+	</body>
+</html>
