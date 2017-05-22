@@ -140,9 +140,7 @@ let D3Table = (function () {
             })
             .enter()
             .append('td')
-            .text(function (d) {
-                return d.value;
-            });
+            .text(d => d.value);
 
         tables[elemCount] = element;
         mapper[id] = elemCount;
@@ -158,7 +156,6 @@ let D3Table = (function () {
     };
 
     D3Table.getElement = elem => {
-        console.log(tables)
         return tables[elemCount - 1][elem];
     };
 
@@ -172,6 +169,14 @@ let D3Table = (function () {
     D3Table.status = () => {
         console.log(movable);
         return D3Table;
+    };
+
+    D3Table.allTables = () => {
+        return tables;
+    };
+
+    D3Table.getTable = (id) => {
+        return tables[mapper[id]];
     };
 
     D3Table.MoveUp = (row) => {
@@ -198,8 +203,8 @@ let D3Table = (function () {
 
     return {
         createTable: D3Table.createTable,
-        move: D3Table.movableTable,
         getElement: D3Table.getElement,
         getData: D3Table.getData
+        
     }
 })();
