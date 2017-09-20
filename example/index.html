@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Move table Contents</title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+		<link rel="stylesheet" href="../css/table.css">
+		<script type="text/javascript" src = "../build/d3table.js"></script>
+		<style type="text/css" media="screen">
+			.root {
+				width:100%;
+				text-align: center;
+				height: 40px;
+				padding-top:5px;
+			}
+
+			.button {
+				text-decoration : none;
+  				padding : 4px;
+  				font-family: tahoma;
+				font-size: 13px;
+				width: 150px;
+				height:30px;
+				padding: 4px 20px;
+				margin: 0 5px;
+			}
+
+			.next{
+				border: 1px solid #1A9176;
+				background: #1A9176;
+				color: #fff;
+			}
+
+			.reset{
+				border: 1px solid #AA6639;
+				background: #FF6400;
+				color: #fff;
+			}
+
+			.content{
+				width:100%;
+				text-align: center;
+				height: 50px;
+			}
+
+			.auto{
+				border: 1px solid #AA6639;
+				background: #fff;
+				color: #000;
+			}
+		</style>
+	</head>
+	<body>
+		<div id = "root" class="root">
+			<a href="#" class="button next" id="nextBtn">Next</a>
+			<a href="#" class="button reset" id="resetBtn">Reset</a>
+			<a href="#" class="button auto" id="autoBtn">Auto</a>
+		</div>
+		<div id="content" class="content">
+			
+		</div>
+		<div id = "root2" class="root2">
+		</div>
+		<script type="text/javascript">
+			let data = {
+					'columns' : ['id', 'product','downloads', 'sales', 'lisenced'],
+					'data' : [
+					   {
+					      "id": 1,
+					      "product": "new product 1",
+					      "downloads": 2614,
+					      "sales": 2614,
+					      "lisenced": 1062
+					   },
+					   {
+					      "id": 2,
+					      "product": "new product 2",
+					      "downloads": 2938,
+					      "sales": 2938,
+					      "lisenced": 1050
+					   },
+					   {
+					      "id": 3,
+					      "product": "new product 3",
+					      "downloads": 4643,
+					      "sales": 4643,
+					      "lisenced": 1728
+					   },
+					   {
+					      "id": 4,
+					      "product": "new product 4",
+					      "downloads": 1013,
+					      "sales": 1013,
+					      "lisenced": 1273
+					   },
+					   {
+					      "id": 5,
+					      "product": "new product 5",
+					      "downloads": 2253,
+					      "sales": 2253,
+					      "lisenced": 889
+					   },
+					   {
+					      "id": 6,
+					      "product": "new product 6",
+					      "downloads": 62,
+					      "sales": 62,
+					      "lisenced": 42
+					   },
+					   {
+					      "id": 7,
+					      "product": "new product 7",
+					      "downloads": 1126,
+					      "sales": 1126,
+					      "lisenced": 552
+					   },
+					   {
+					      "id": 8,
+					      "product": "new product 8",
+					      "downloads": 1636,
+					      "sales": 1636,
+					      "lisenced": 35
+					   },
+					   {
+					      "id": 9,
+					      "product": "new product 9",
+					      "downloads": 2740,
+					      "sales": 2740,
+					      "lisenced": 875
+					   },
+					   {
+					      "id": 10,
+					      "product": "new product 10",
+					      "downloads": 1819,
+					      "sales": 1819,
+					      "lisenced": 1660
+					   },
+					   {
+					      "id": 11,
+					      "product": "new product 11",
+					      "downloads": 4336,
+					      "sales": 4336,
+					      "lisenced": 1639
+					   },
+					   {
+					      "id": 12,
+					      "product": "new product 12",
+					      "downloads": 3807,
+					      "sales": 3807,
+					      "lisenced": 189
+					   },
+					   {
+					      "id": 13,
+					      "product": "new product 13",
+					      "downloads": 614,
+					      "sales": 614,
+					      "lisenced": 1693
+					   },
+					   {
+					      "id": 14,
+					      "product": "new product 14",
+					      "downloads": 2328,
+					      "sales": 2328,
+					      "lisenced": 1891
+					   }
+					]
+				},
+				tableElem = d3table.default.createTable('#root2', data);
+
+				let count = 0,
+					int1,
+					nextBtn = document.getElementById("nextBtn"),
+					resetBtn = document.getElementById("resetBtn"),
+					content = document.getElementById("content"),
+					auto = document.getElementById("autoBtn"),
+					getArr = function(data) {
+						let item = data.columns[0],
+							_d = data.data,
+							arr = [];
+
+						_d.forEach(x => {
+							arr.push(x[item]);
+						});
+						return arr;
+					},
+					getSepArr = arr => {
+						let newArr = [];
+						
+						for(let i = 0; i < arr.length; i++) {
+							let d = arr[i];
+							i === 0 && newArr.push(d);
+							
+							if(d-1 === arr[i-1]) {
+								if(d+1 === arr[i+1]) {
+									continue;
+								}
+								newArr.push(d+1);
+							}
+						}
+						return newArr;
+					},
+					avg = function (data) {
+						let len = data.length,
+							sum,
+							table = {
+								columns: [],
+								data: []
+							},
+							ob = {};
+						for(let i = 0; i < data.columns.length; i++) {
+							sum = 0;
+							if(i === 0 ){
+								table.columns.push('Avarage');
+								ob['Avarage'] = '1';
+								continue;
+							}
+							for(let j = 0; j < data.data.length; j++) {
+								if(data.data[j][data.columns[i]]) {
+									sum += Number(data.data[j][data.columns[i]]);
+								}
+							}
+							table.columns.push(data.columns[i]);
+							ob[data.columns[i]] = Math.ceil(sum / data.data.length);
+							
+						}
+						table.data.push(ob);
+						return table;
+					};
+
+				nextBtn.addEventListener("click", function () {
+					let allData = tableElem.data.data;
+					switch(count) {
+						case 0: tableElem.update(tableElem.select(['id', 'downloads', 'lisenced']));
+								content.innerHTML = 'Selecting Downloads and Lisenced for All products';
+								break;
+
+						case 1: content.innerHTML = 'Highlighting Downloads less than 1000';
+								list = getArr(tableElem.select('id', '$downloads < 1000'));
+								tableElem.highLight({
+									rows: list
+								});break;
+
+						case 2: content.innerHTML = 'Highlighting Downloads greater than 2000';
+								list = getArr(tableElem.select('id', '$downloads > 2000'));
+								tableElem.highLight({
+									rows: list,
+									bgcolor: '#02A6ED'
+								});break;
+
+						case 3: content.innerHTML = 'Highlighting Downloads in between 1000 and 2000';
+								list = getArr(tableElem.select('id', '$downloads < 2000 && $downloads > 1000'));
+								tableElem.addblankRows([4,5,7,9,10,11]);
+								tableElem.highLight({
+									rows: list,
+									bgcolor: '#00EDBF'
+								});
+								break;
+
+						case 4: content.innerHTML = 'Removing the rows seperations';
+								tableElem.removeBlankRows();
+								break;
+
+						case 5: content.innerHTML = 'Selecting Rows in which Downloads is in between 1000 and 2000';
+								tableElem.update(tableElem.select(['id', 'downloads', 'lisenced'], '$downloads < 2000 && $downloads > 1000'));
+								tableElem.highLight({
+									rows: [1,2,3,4],
+									bgcolor: '#00EDBF'
+								});
+								break;
+
+						case 6: content.innerHTML = 'Avarage Downloads and Lisenced Products';
+								allData = avg(tableElem.data);
+								tableElem.update(allData);
+								break;
+
+						case 7: content.innerHTML = 'Adding Separation Between Columns';
+								tableElem.addBlankColumns([1,2]);
+								break;
+
+						case 8: content.innerHTML = 'Removing Separation Between Columns';
+								tableElem.removeBlankColumns();
+								break;
+
+						case 9: count = -1;
+								content.innerHTML = 'Reseting the Table';
+								tableElem.removeHighLights();
+								setTimeout(function () {
+									tableElem.update(data);
+								}, 2000);
+								break;
+					}
+
+					count++;
+				});
+
+				function scheduleStuff() {
+				    int1 = setInterval(doStuff, 3000);
+				}
+
+				function doStuff() {
+				    nextBtn.click();
+				    if(count === 0){
+				        clearInterval(int1); 
+				    }
+				}
+
+				resetBtn.addEventListener("click", function () {
+					count = 0;
+					content.innerHTML = 'Table Reset';
+					tableElem.update(data);
+				});
+
+				auto.addEventListener("click", function () {
+					scheduleStuff();
+				});
+				
+		</script>
+	</body>
+</html>
